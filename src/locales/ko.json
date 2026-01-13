@@ -1,0 +1,55 @@
+{
+  "name": "이름",
+  "mobilePhone": "전화번호",
+  "verifyNumber": "인증번호",
+  "request": "요청하기",
+  "verify": "인증하기",
+
+  "popup": {
+    "cancelRegisterTitle": "교인 등록을 종료하시겠습니까?",
+    "cancelRegisterBody": "입력된 정보는 저장되지 않습니다.",
+    "registerSuccess": "교인이 등록되었습니다.",
+
+    "deleteMemberTitle": "해당 교인을 삭제하시겠습니까?",
+    "deleteMemberBody": "삭제된 교인은 복구할 수 없습니다.",
+
+    "deleteGroupTitle": "해당 그룹을 삭제하시겠습니까?",
+    "deleteGroupBody": "삭제된 그룹은 복구할 수 없습니다.",
+
+    "deleteEducationTitle": "해당 교육을 삭제하시겠습니까?",
+    "deleteEducationBody": "삭제된 교육은 복구할 수 없습니다.",
+
+    "deleteOfficerTitle": "해당 직분을 삭제하시겠습니까?",
+    "deleteOfficerBody": "삭제된 직분은 복구할 수 없습니다.",
+
+    "deleteMinistryGroupTitle": "해당 사역 그룹을 삭제하시겠습니까?",
+    "deleteMinistryGroupBody": "삭제된 사역 그룹은 복구할 수 없습니다.",
+
+    "deleteEnrollmentTitle": "선택된 교인(들)을 교육에서 삭제하시겠습니까?",
+    "deleteEnrollmentBody": "삭제된 등록 내역은 복구할 수 없습니다.",
+
+    "deleteHistoryTitle": "해당 이력을 삭제하시겠습니까?",
+    "deleteHistoryBody": "삭제된 이력은 복구할 수 없습니다.",
+
+    "deleteFamilyTitle": "해당 가족 관계를 삭제하시겠습니까?",
+    "deleteFamilyBody": "삭제된 관계는 복구할 수 없습니다.",
+
+    "deleteTermTitle": "해당 교육 기수를 삭제하시겠습니까?",
+    "deleteTermBody": "삭제된 기수는 복구할 수 없습니다.",
+
+    "saveComplete": "저장이 완료되었습니다.",
+    "verifyFail": "잘못된 인증번호 입니다.",
+    "duplicatedRole": "이미 등록된 그룹 역할입니다.",
+    "duplicatedMinistry": "이미 등록된 사역입니다."
+  },
+
+  "placeholder": {
+    "name": "이름을 입력해주세요.",
+    "mobilePhone": "전화번호를 입력해주세요.",
+    "verifyNumber": "인증번호를 입력해주세요."
+  },
+
+  "button": {
+    "register": "가입하기"
+  }
+}

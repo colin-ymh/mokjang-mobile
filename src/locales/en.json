@@ -1,0 +1,56 @@
+{
+  "name": "Name",
+  "mobilePhone": "Mobile Phone",
+  "verifyNumber": "Verify Number",
+  "request": "Request",
+  "verify": "Verify",
+
+  "popup": {
+    "cancelRegisterTitle": "Do you want to cancel church member registration?",
+    "cancelRegisterBody": "The entered information will not be saved.",
+    "registerSuccess": "The church member has been registered.",
+
+    "deleteMemberTitle": "Do you want to delete this member?",
+    "deleteMemberBody": "Deleted member cannot be restored.",
+
+    "deleteGroupTitle": "Do you want to delete this group?",
+    "deleteGroupBody": "Deleted group cannot be restored.",
+
+    "deleteOfficerTitle": "Do you want to delete this officer?",
+    "deleteOfficerBody": "Deleted officer cannot be restored.",
+
+    "deleteEducationTitle": "Do you want to delete this education?",
+    "deleteEducationBody": "Deleted education cannot be restored.",
+
+    "deleteMinistryGroupTitle": "Do you want to delete this ministry group?",
+    "deleteMinistryGroupBody": "Deleted ministry group cannot be restored.",
+
+    "deleteEnrollmentTitle": "Do you want to delete this enrollment(s)?",
+    "deleteEnrollmentBody": "Deleted enrollment cannot be restored.",
+
+    "deleteHistoryTitle": "Do you want to delete this history?",
+    "deleteHistoryBody": "Deleted history cannot be restored.",
+
+    "deleteFamilyTitle": "Do you want to delete this family relationship?",
+    "deleteFamilyBody": "Deleted relationship cannot be restored.",
+
+    "deleteTermTitle": "Do you want to delete this term?",
+    "deleteTermBody": "Deleted term cannot be restored.",
+
+    "saveComplete": "Save Complete.",
+
+    "verifyFail": "You've entered wrong number.",
+    "duplicatedRole": "That role is already duplicated.",
+    "duplicatedMinistry": "That ministry is already duplicated."
+  },
+
+  "placeholder": {
+    "name": "Enter your name.",
+    "mobilePhone": "Enter your mobile phone number.",
+    "verifyNumber": "Enter the verify number."
+  },
+
+  "button": {
+    "register": "Register"
+  }
+}
