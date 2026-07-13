@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {TEST_SERVER_URL} from '../constants/url';
+import {TEST_SERVER_URL} from '../constants/env';
 import CookieManager from '@react-native-cookies/cookies';
 
 const authorizeAxios = axios.create({
@@ -92,43 +92,42 @@ authorizeAxios.interceptors.request.use(
 authorizeAxios.interceptors.response.use(
   response => response,
   async error => {
-    if (error.response?.status === 401) {
-      const originalRequest = error.config;
+    const originalRequest = error.config;
+
+    // 401 + 아직 재시도 안 한 요청만 (재귀/무한루프 방지)
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
 
       try {
-        // ✅ 저장된 쿠키 확인
         const cookies = await CookieManager.get(TEST_SERVER_URL);
-        console.log('🔄 Refreshing Token, Stored Cookies:', cookies);
-
-        const refreshToken = cookies.MJRT?.value; // Refresh Token 가져오기
+        const refreshToken = cookies.MJRT?.value;
         if (!refreshToken) {
-          console.log('❌ No Refresh Token found, clearing all cookies.');
           await CookieManager.clearAll();
           return Promise.reject(error);
         }
 
-        // ✅ Refresh Token을 이용해 새로운 Access Token 요청
+        // rotate 성공 시 응답 Set-Cookie로 새 MJAT가 네이티브 쿠키에 자동 반영됨.
         const refreshResponse = await axios.post(
           `${TEST_SERVER_URL}/auth/token/rotate`,
           {},
-          {
-            withCredentials: true, // ✅ 쿠키 전송 설정 추가
-          },
+          {withCredentials: true},
         );
 
-        console.log(refreshResponse);
+        // 백엔드가 body로도 토큰을 주면 명시 저장(객체 형태로 전달 — 기존 버그 수정).
+        if (refreshResponse.data?.accessToken) {
+          await setAuthorizationToken({
+            accessToken: refreshResponse.data.accessToken,
+            refreshToken: refreshResponse.data.refreshToken,
+          });
+        }
 
-        const newAccessToken = refreshResponse.data.accessToken;
-        console.log('🔄 New Access Token received:', newAccessToken);
-
-        // ✅ 새로운 Access Token 저장
-        await setAuthorizationToken(newAccessToken);
-
-        // ✅ 기존 요청을 새로운 토큰으로 다시 실행
+        // 갱신된 쿠키로 원 요청 재시도
         return authorizeAxios(originalRequest);
       } catch (refreshError) {
-        console.log(refreshError);
-        console.error('❌ Token Refresh Failed, logging out:', refreshError);
         await CookieManager.clearAll();
         return Promise.reject(refreshError);
       }

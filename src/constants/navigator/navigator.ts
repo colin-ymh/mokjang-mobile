@@ -3,6 +3,7 @@ export const AUTH_STACK = {
   TEST_LOGIN: {NAME: 'TestLoginScreen', TITLE: '소셜로그인 화면'},
   MAIN_BOTTOM_TAB: {NAME: 'MainBottomTabNav', TITLE: '메인 스택'},
   REGISTER: {NAME: 'RegisterScreen', TITLE: '회원등록 화면'},
+  APP: {NAME: 'AppScreen', TITLE: '앱'}
 } as const;
 
 export type AuthStackParams = {

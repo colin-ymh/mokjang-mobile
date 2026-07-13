@@ -1,36 +1,14 @@
-import React, {forwardRef} from 'react';
+import  {forwardRef, useMemo, useState} from 'react';
 import {
   TextInput,
   TextInputProps,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
+  StyleSheet,
+  TextStyle,
 } from 'react-native';
-import styled from 'styled-components/native';
 
 import {BLACK, MAIN} from '../../../../constants/style/color';
-
-const MainInputContainer = styled.TextInput<{
-  ref?: React.ForwardedRef<TextInput>;
-  $width?: number;
-  $height?: number;
-  $color?: string;
-  $backgroundColor?: string;
-  $borderBottomColor?: string;
-  $isEditable?: boolean;
-}>`
-  width: ${({$width}) => ($width ? `${$width}px` : '100%')};
-  font-size: 14px;
-  padding: 12px 16px;
-  height: ${({$height}) => ($height ? `${$height}px` : 'auto')};
-  color: ${({$color}) => $color || BLACK};
-  background-color: ${({$backgroundColor}) => $backgroundColor || 'auto'};
-  position: relative;
-
-  &:focus {
-    border-bottom: ${({$borderBottomColor}) =>
-      `1px solid ${$borderBottomColor || MAIN.DEFAULT}`};
-  }
-`;
 
 export type InputProps = TextInputProps & {
   label?: string;
@@ -56,21 +34,49 @@ const MainInput = forwardRef<TextInput, InputProps>(
       color,
       backgroundColor,
       borderBottomColor,
+      style,
+      onFocus,
+      onBlur,
       ...props
     },
     ref,
   ) => {
+    const [isFocused, setIsFocused] = useState(false);
+
+    const dynamicStyle = useMemo<TextStyle>(() => {
+      const s: TextStyle = {
+        width: width ?? '100%',
+        height,
+        color: color ?? BLACK,
+        backgroundColor: backgroundColor ?? 'transparent',
+      };
+
+      // styled-components의 &:focus border-bottom 대체
+      if (isFocused) {
+        s.borderBottomWidth = 1;
+        s.borderBottomColor = borderBottomColor ?? MAIN.DEFAULT;
+      } else {
+        // 필요하면 기본 borderBottom을 유지하고 싶을 때 여기에 추가 가능
+        // s.borderBottomWidth = 0;
+      }
+
+      return s;
+    }, [width, height, color, backgroundColor, isFocused, borderBottomColor]);
+
     return (
-      <MainInputContainer
+      <TextInput
         ref={ref}
         value={value}
-        $height={height}
-        $width={width}
-        $color={color}
-        $backgroundColor={backgroundColor}
-        $borderBottomColor={borderBottomColor}
-        $isEditable={editable}
         editable={editable}
+        style={[styles.input, dynamicStyle, style]}
+        onFocus={e => {
+          setIsFocused(true);
+          onFocus?.(e);
+        }}
+        onBlur={e => {
+          setIsFocused(false);
+          onBlur?.(e);
+        }}
         {...props}
       />
     );
@@ -78,3 +84,12 @@ const MainInput = forwardRef<TextInput, InputProps>(
 );
 
 export default MainInput;
+
+const styles = StyleSheet.create({
+  input: {
+    fontSize: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    position: 'relative',
+  },
+});

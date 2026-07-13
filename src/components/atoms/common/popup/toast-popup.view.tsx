@@ -1,6 +1,12 @@
-import React from 'react';
-import {Animated, Pressable, Text} from 'react-native';
-import styled from 'styled-components/native';
+import {useMemo} from 'react';
+import {
+  Animated,
+  Pressable,
+  Text,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import {FONT_WEIGHT} from '../../../../constants/style/style';
 import {WHITE} from '../../../../constants/style/color';
@@ -23,33 +29,6 @@ type ToastPopupViewProps = {
   onClickDeleteButton: () => void;
 };
 
-const Wrapper = styled.View<{direction: TOAST_DIRECTION}>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  justify-content: ${({direction}) =>
-    direction === TOAST_DIRECTION.TOP ? 'flex-start' : 'flex-end'};
-  align-items: center;
-`;
-
-const Container = styled(Animated.View)<{$bgColor: string}>`
-  position: absolute;
-  left: 30px;
-  right: 30px;
-  height: 40px;
-  bottom: 30px;
-  border-radius: 5px;
-  justify-content: center;
-  align-items: center;
-  background-color: ${({$bgColor}) => $bgColor};
-`;
-
-const CloseButton = styled(Pressable)`
-  margin-top: 5px;
-`;
-
 export default function ToastPopupView({
   text,
   backgroundColor,
@@ -61,19 +40,60 @@ export default function ToastPopupView({
   onClickDeleteButton,
   direction,
 }: ToastPopupViewProps) {
+  const wrapperStyle = useMemo<ViewStyle>(
+    () => ({
+      justifyContent:
+        direction === TOAST_DIRECTION.TOP ? 'flex-start' : 'flex-end',
+    }),
+    [direction],
+  );
+
+  const containerBaseStyle = useMemo<ViewStyle>(
+    () => ({
+      backgroundColor,
+    }),
+    [backgroundColor],
+  );
+
   return (
-    <Wrapper direction={direction} pointerEvents="none">
-      <Container
+    <View style={[styles.wrapper, wrapperStyle]} pointerEvents="none">
+      <Animated.View
         pointerEvents="auto"
-        style={containerStyle}
-        $bgColor={backgroundColor}>
-        <Text style={{color, fontSize, fontWeight}}>{text}</Text>
+        style={[styles.container, containerBaseStyle, containerStyle]}>
+        <Text style={{color, fontSize, fontWeight: String(fontWeight) as any}}>
+          {text}
+        </Text>
+
         {isDeletable && (
-          <CloseButton onPress={onClickDeleteButton}>
+          <Pressable style={styles.closeButton} onPress={onClickDeleteButton}>
             <Text style={{color: WHITE}}>X</Text>
-          </CloseButton>
+          </Pressable>
         )}
-      </Container>
-    </Wrapper>
+      </Animated.View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  wrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+  },
+  container: {
+    position: 'absolute',
+    left: 30,
+    right: 30,
+    height: 40,
+    bottom: 30,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  closeButton: {
+    marginTop: 5,
+  },
+});

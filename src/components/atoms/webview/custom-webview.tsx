@@ -1,47 +1,52 @@
-import React from 'react';
 import {StyleSheet, SafeAreaView} from 'react-native';
 
 import WebView, {
   WebViewMessageEvent,
   WebViewProps,
 } from '@dr.pogodin/react-native-webview';
-import {WEBVIEW_URL} from '../../../constants/url';
+import WebViewErrorEvent from '@dr.pogodin/react-native-webview';
+import {APP_CLIENT_URL} from '../../../constants/env';
 
-interface CustomWebviewProps extends WebViewProps {
-  webRef: React.RefObject<WebView>;
+export interface CustomWebviewProps<TMessage = unknown>
+  extends Omit<WebViewProps, 'source' | 'onMessage'> {
+  webRef: React.RefObject<WebView | null>;
   uri: string;
-  onMessage?: (event: object) => void;
+  onMessage?: (message: TMessage) => void;
 }
 
-const CustomWebview = ({
+const CustomWebview = <TMessage,>({
   webRef,
   uri,
   onMessage,
   ...webViewProps
-}: CustomWebviewProps): React.JSX.Element => {
+}: CustomWebviewProps<TMessage>): React.JSX.Element => {
   const metaTagInjection = `
-  // 1) 뷰포트 메타태그
-  const meta = document.createElement('meta');
-  meta.setAttribute('name', 'viewport');
-  meta.setAttribute('content',
-    'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, shrink-to-fit=no'
-  );
-  document.head.appendChild(meta);
+    const meta = document.createElement('meta');
+    meta.setAttribute('name', 'viewport');
+    meta.setAttribute(
+      'content',
+      'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, shrink-to-fit=no'
+    );
+    document.head.appendChild(meta);
 
-  // 2) iOS auto-zoom 방지 (input 폰트 크기 강제 16px 이상)
-  const style = document.createElement('style');
-  style.innerHTML = \`
-    input, select, textarea {
-      font-size: 16px;
+    const style = document.createElement('style');
+    style.innerHTML = \`
+      input, select, textarea {
+        font-size: 16px;
+      }
+    \`;
+    document.head.appendChild(style);
+
+    true;
+  `;
+
+  const parseMessage = (event: WebViewMessageEvent): TMessage | null => {
+    try {
+      return JSON.parse(event.nativeEvent.data) as TMessage;
+    } catch (error) {
+      console.warn('WebView message parse error:', error);
+      return null;
     }
-  \`;
-  document.head.appendChild(style);
-
-  true;
-`;
-
-  const getMessage = (msg: WebViewMessageEvent): object => {
-    return JSON.parse(msg.nativeEvent.data);
   };
 
   return (
@@ -49,23 +54,23 @@ const CustomWebview = ({
       <WebView
         ref={webRef}
         style={styles.webview}
-        source={{uri: `${WEBVIEW_URL}/${uri}`}}
-        // source={{uri: `http://localhost:3000/${uri}`}}
+        source={{uri: `${APP_CLIENT_URL}/${uri}`}}
         injectedJavaScript={metaTagInjection}
-        onMessage={msg => {
-          if (onMessage) {
-            onMessage(getMessage(msg));
+        onMessage={(event: WebViewMessageEvent) => {
+          if (!onMessage) return;
+          const parsed = parseMessage(event);
+          if (parsed !== null) {
+            onMessage(parsed);
           }
         }}
-        startInLoadingState={true}
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
-        onError={syntheticEvent => {
-          const {nativeEvent} = syntheticEvent;
-          console.log('WebView error: ', nativeEvent);
+        startInLoadingState
+        javaScriptEnabled
+        domStorageEnabled
+        sharedCookiesEnabled
+        thirdPartyCookiesEnabled
+        onError={(event: WebViewErrorEvent) => {
+          console.log('WebView error:', event);
         }}
-        sharedCookiesEnabled={true} // iOS/Android에서 네이티브 쿠키 공유 활성화
-        thirdPartyCookiesEnabled={true} // 서드파티 쿠키 허용
         {...webViewProps}
       />
     </SafeAreaView>

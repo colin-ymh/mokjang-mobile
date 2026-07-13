@@ -1,6 +1,7 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import Config from 'react-native-config';
 
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {
@@ -36,14 +37,13 @@ const OauthList = ({navigation}: OauthListProps) => {
   // 초기 설정
   useEffect(() => {
     GoogleSignin.configure({
-      iosClientId:
-        '448611556147-30o1nrq5akocrtmbqriu2gcuvsjioo3v.apps.googleusercontent.com',
+      iosClientId: Config.GOOGLE_IOS_CLIENT_ID,
     });
 
     NaverLogin.initialize({
       appName: 'mokjang',
-      consumerKey: 'fQHH1hsqVpucKd7R2CDS',
-      consumerSecret: 'TvZmIAB0D6',
+      consumerKey: Config.NAVER_CONSUMER_KEY ?? '',
+      consumerSecret: Config.NAVER_CONSUMER_SECRET ?? '',
       serviceUrlSchemeIOS: 'mokjang',
       disableNaverAppAuthIOS: true,
     });
@@ -84,7 +84,7 @@ const OauthList = ({navigation}: OauthListProps) => {
         const userResponse = await userApi.getUser();
         if (userResponse.data) {
           dispatch(setUser(userResponse.data));
-          navigation.navigate(AUTH_STACK.MAIN.NAME);
+          navigation.navigate(AUTH_STACK.MAIN_BOTTOM_TAB.NAME);
         }
       } else if (response.data.temporal) {
         dispatch(setProvider(provider));

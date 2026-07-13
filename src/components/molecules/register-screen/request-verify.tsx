@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import  {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useDispatch, useSelector} from 'react-redux';
@@ -115,24 +115,24 @@ const RequestVerify = () => {
 
       if (response.status === 201 && provider) {
         // 로컬에 저장해둔 provider, providerId 재활용
-        const serverResponse = await authApi.getMobileAuth({
-          provider,
-          providerId,
-        });
-
-        if (serverResponse.data.accessToken) {
-          await setAuthorizationToken({
-            accessToken: serverResponse.data.accessToken,
-            refreshToken: serverResponse.data.refreshToken,
-          });
-
-          // 로컬에 사용자 정보 저장
-          const userResponse = await userApi.getUser();
-          if (userResponse.data) {
-            dispatch(setUser(userResponse.data));
-            navigation.navigate(AUTH_STACK.MAIN.NAME);
-          }
-        }
+        // const serverResponse = await authApi.getMobileAuth({
+        //   provider,
+        //   providerId,
+        // });
+        //
+        // if (serverResponse.data.accessToken) {
+        //   await setAuthorizationToken({
+        //     accessToken: serverResponse.data.accessToken,
+        //     refreshToken: serverResponse.data.refreshToken,
+        //   });
+        //
+        //   // 로컬에 사용자 정보 저장
+        //   const userResponse = await userApi.getUser();
+        //   if (userResponse.data) {
+        //     dispatch(setUser(userResponse.data));
+        //     navigation.navigate(AUTH_STACK.APP.NAME);
+        //   }
+        // }
       }
     } catch (error) {
       setThrownError(error instanceof Error ? error : new Error(String(error)));

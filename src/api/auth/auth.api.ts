@@ -1,9 +1,7 @@
-import axios, {AxiosResponse} from 'axios';
-import qs from 'query-string';
-
-import {SERVER_URL, TEST_SERVER_URL} from '../../constants/url';
+import {AxiosResponse} from 'axios';
 import authorizeAxios from '../authorize-axios';
-import {OAUTH_PROVIDER} from '../../constants/common';
+import {CustomError} from '../error/error';
+import {IS_PRODUCTION, SERVER_URL, TEST_SERVER_URL} from '../../constants/env';
 
 export enum IS_TEST {
   INTERNAL_TEST = 'internalTest',
@@ -22,7 +20,7 @@ type getOAuthParams = {
 };
 
 type getTestAuthParams = {
-  provider: OAUTH_PROVIDER;
+  provider: string;
   providerId: string;
 };
 
@@ -46,7 +44,7 @@ export class AuthApi {
   private _url: string;
 
   constructor(useBaseURL: boolean) {
-    this._url = useBaseURL
+    this._url = IS_PRODUCTION
       ? SERVER_URL // 실제 사용할 url
       : TEST_SERVER_URL; // 개발용 url
   }
@@ -65,47 +63,49 @@ export class AuthApi {
       return url;
       // return await axios.get(url.toString());
     } catch (serverError: any) {
-      throw serverError;
-      // if (serverError.response) {
-      //   const { message, error, statusCode } = serverError.response.data;
-      //   throw new CustomError(message, error, statusCode);
-      // } else {
-      //   throw new CustomError(
-      //     '알 수 없는 에러가 발생했습니다',
-      //     500,
-      //     'Unknown Error'
-      //   );
-      // }
+      if (serverError.response) {
+        const {message, error, statusCode} = serverError.response.data;
+        throw new CustomError(message, error, statusCode);
+      } else {
+        throw new CustomError(
+          '알 수 없는 에러가 발생했습니다',
+          500,
+          'Unknown Error',
+        );
+      }
     }
   };
-
-  /**
-   * 로그인
-   * @param {getTestAuthParams} params
-   * @returns {Promise<AxiosResponse>}
-   */
-  public getMobileAuth = async (
-    params: getTestAuthParams,
-  ): Promise<AxiosResponse> => {
-    const queryParams = qs.stringify({...params, loginOption: 'mobile'});
-    const url = `${this._url}/auth/mobile-login?${queryParams}`;
-
-    try {
-      return await axios.post(url.toString(), params);
-    } catch (serverError: any) {
-      throw serverError;
-      // if (serverError.response) {
-      //   const { message, error, statusCode } = serverError.response.data;
-      //   throw new CustomError(message, error, statusCode);
-      // } else {
-      //   throw new CustomError(
-      //     '알 수 없는 에러가 발생했습니다',
-      //     500,
-      //     'Unknown Error'
-      //   );
-      // }
-    }
-  };
+  //
+  // /**
+  //  * 테스트용 로그인
+  //  * @param {getTestAuthParams} params
+  //  * @returns {Promise<AxiosResponse>}
+  //  */
+  // public getTestAuth = async (
+  //   params: getTestAuthParams,
+  // ): Promise<AxiosResponse> => {
+  //   const {provider, providerId} = params;
+  //
+  //   const url = new URL(`/auth/test/sign-in`, this._url);
+  //
+  //   url.searchParams.set('provider', provider);
+  //   url.searchParams.set('providerId', providerId);
+  //
+  //   try {
+  //     return await authorizeAxios.post(url.toString());
+  //   } catch (serverError: any) {
+  //     if (serverError.response) {
+  //       const {message, error, statusCode} = serverError.response.data;
+  //       throw new CustomError(message, error, statusCode);
+  //     } else {
+  //       throw new CustomError(
+  //         '알 수 없는 에러가 발생했습니다',
+  //         500,
+  //         'Unknown Error',
+  //       );
+  //     }
+  //   }
+  // };
 
   /**
    * 인증번호 요청
@@ -122,17 +122,16 @@ export class AuthApi {
     try {
       return await authorizeAxios.post(url.toString(), body);
     } catch (serverError: any) {
-      throw serverError;
-      // if (serverError.response) {
-      //   const { message, error, statusCode } = serverError.response.data;
-      //   throw new CustomError(message, error, statusCode);
-      // } else {
-      //   throw new CustomError(
-      //     '알 수 없는 에러가 발생했습니다',
-      //     500,
-      //     'Unknown Error'
-      //   );
-      // }
+      if (serverError.response) {
+        const {message, error, statusCode} = serverError.response.data;
+        throw new CustomError(message, error, statusCode);
+      } else {
+        throw new CustomError(
+          '알 수 없는 에러가 발생했습니다',
+          500,
+          'Unknown Error',
+        );
+      }
     }
   };
 
@@ -149,17 +148,16 @@ export class AuthApi {
     try {
       return await authorizeAxios.post(url.toString(), body);
     } catch (serverError: any) {
-      throw serverError;
-      // if (serverError.response) {
-      //   const { message, error, statusCode } = serverError.response.data;
-      //   throw new CustomError(message, error, statusCode);
-      // } else {
-      //   throw new CustomError(
-      //     '알 수 없는 에러가 발생했습니다',
-      //     500,
-      //     'Unknown Error'
-      //   );
-      // }
+      if (serverError.response) {
+        const {message, error, statusCode} = serverError.response.data;
+        throw new CustomError(message, error, statusCode);
+      } else {
+        throw new CustomError(
+          '알 수 없는 에러가 발생했습니다',
+          500,
+          'Unknown Error',
+        );
+      }
     }
   };
 
@@ -174,65 +172,44 @@ export class AuthApi {
     try {
       return await authorizeAxios.post(url.toString(), body);
     } catch (serverError: any) {
-      throw serverError;
-      // if (serverError.response) {
-      //   const { message, error, statusCode } = serverError.response.data;
-      //   throw new CustomError(message, error, statusCode);
-      // } else {
-      //   throw new CustomError(
-      //     '알 수 없는 에러가 발생했습니다',
-      //     500,
-      //     'Unknown Error'
-      //   );
-      // }
+      if (serverError.response) {
+        const {message, error, statusCode} = serverError.response.data;
+        throw new CustomError(message, error, statusCode);
+      } else {
+        throw new CustomError(
+          '알 수 없는 에러가 발생했습니다',
+          500,
+          'Unknown Error',
+        );
+      }
     }
   };
 
   /**
-   * Access 토큰 재발급
-   * @returns {Promise<AxiosResponse>}
+   * 네이티브 OAuth 로그인 교환
+   * 네이티브 SDK(Kakao/Naver/Google)로 얻은 provider/providerId를 백엔드에
+   * 넘겨 세션 토큰(accessToken/refreshToken) 또는 temporal 토큰을 받는다.
+   * @returns {Promise<AxiosResponse>} 기존유저: {accessToken, refreshToken} / 신규: {temporal}
    */
-  public getRefreshToken = async (): Promise<AxiosResponse> => {
-    const url = new URL('/auth/token/rotate', this._url);
+  public getMobileAuth = async (body: {
+    provider: string;
+    providerId: string;
+  }): Promise<AxiosResponse> => {
+    const url = new URL('/auth/mobile-login', this._url);
 
     try {
-      return await authorizeAxios.post(url.toString());
+      return await authorizeAxios.post(url.toString(), body);
     } catch (serverError: any) {
-      throw serverError;
-      // if (serverError.response) {
-      //   const { message, error, statusCode } = serverError.response.data;
-      //   throw new CustomError(message, error, statusCode);
-      // } else {
-      //   throw new CustomError(
-      //     '알 수 없는 에러가 발생했습니다',
-      //     500,
-      //     'Unknown Error'
-      //   );
-      // }
-    }
-  };
-
-  /**
-   * 유저 정보 가져오기
-   * @returns {Promise<AxiosResponse>}
-   */
-  public getUser = async (): Promise<AxiosResponse> => {
-    const url = new URL('/auth/user', this._url);
-
-    try {
-      return await authorizeAxios.get(url.toString());
-    } catch (serverError: any) {
-      throw serverError;
-      // if (serverError.response) {
-      //   const { message, error, statusCode } = serverError.response.data;
-      //   throw new CustomError(message, error, statusCode);
-      // } else {
-      //   throw new CustomError(
-      //     '알 수 없는 에러가 발생했습니다',
-      //     500,
-      //     'Unknown Error'
-      //   );
-      // }
+      if (serverError.response) {
+        const {message, error, statusCode} = serverError.response.data;
+        throw new CustomError(message, error, statusCode);
+      } else {
+        throw new CustomError(
+          '알 수 없는 에러가 발생했습니다',
+          500,
+          'Unknown Error',
+        );
+      }
     }
   };
 
@@ -246,17 +223,16 @@ export class AuthApi {
     try {
       return await authorizeAxios.get(url.toString());
     } catch (serverError: any) {
-      throw serverError;
-      // if (serverError.response) {
-      //   const { message, error, statusCode } = serverError.response.data;
-      //   throw new CustomError(message, error, statusCode);
-      // } else {
-      //   throw new CustomError(
-      //     '알 수 없는 에러가 발생했습니다',
-      //     500,
-      //     'Unknown Error'
-      //   );
-      // }
+      if (serverError.response) {
+        const {message, error, statusCode} = serverError.response.data;
+        throw new CustomError(message, error, statusCode);
+      } else {
+        throw new CustomError(
+          '알 수 없는 에러가 발생했습니다',
+          500,
+          'Unknown Error',
+        );
+      }
     }
   };
 
@@ -276,18 +252,16 @@ export class AuthApi {
         {withCredentials: true},
       );
     } catch (serverError: any) {
-      throw serverError;
+      if (serverError.response) {
+        const {message, error, statusCode} = serverError.response.data;
+        throw new CustomError(message, error, statusCode);
+      } else {
+        throw new CustomError(
+          '알 수 없는 에러가 발생했습니다.',
+          500,
+          'Unknown Error',
+        );
+      }
     }
-    //   if (serverError.response) {
-    //     const {message, error, statusCode} = serverError.response.data;
-    //     throw new CustomError(message, error, statusCode);
-    //   } else {
-    //     throw new CustomError(
-    //       '알 수 없는 에러가 발생했습니다.',
-    //       500,
-    //       'Unknown Error',
-    //     );
-    //   }
-    // }
   };
 }

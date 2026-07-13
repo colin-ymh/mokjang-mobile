@@ -1,5 +1,5 @@
 import {useTranslation} from 'react-i18next';
-import styled from 'styled-components/native';
+import {StyleSheet, View} from 'react-native';
 
 import BorderInput from '../../atoms/common/input/border-input';
 import {MainText} from '../../atoms/common/text/main-text';
@@ -8,48 +8,6 @@ import {getIsWellFormedMobilePhone} from '../../../utils/check';
 import {getMinuteFromSecond} from '../../../utils/date';
 import {BLUE} from '../../../constants/style/color';
 import CheckButton from '../../atoms/common/button/check-button';
-
-const Container = styled.View`
-  flex: 1;
-  justify-content: center;
-  gap: 10px;
-`;
-
-const Row = styled.View`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: 50px;
-  gap: 10px;
-`;
-
-const Title = styled.View`
-  justify-content: center;
-  align-items: flex-start;
-  width: 60px;
-`;
-
-const InputContainer = styled.View`
-  display: flex;
-  flex-grow: 1;
-`;
-
-const TimeContainer = styled.View<{$isShown?: boolean}>`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  padding-left: 10px;
-  opacity: ${({$isShown}) => ($isShown ? 1 : 0)};
-  height: ${({$isShown}) => ($isShown ? 'auto' : '0px')};
-`;
-
-const ConsentContainer = styled.View`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-`;
 
 type RequestVerifyViewProps = {
   name: string;
@@ -86,34 +44,36 @@ const RequestVerifyView = ({
 }: RequestVerifyViewProps) => {
   const {t} = useTranslation();
 
+  const isTimeShown = !!second && !isVerified;
+
   return (
-    <Container>
-      <Row>
-        <Title>
+    <View style={styles.container}>
+      <View style={styles.row}>
+        <View style={styles.title}>
           <MainText>{t('name')}</MainText>
-        </Title>
-        <InputContainer>
+        </View>
+        <View style={styles.inputContainer}>
           <BorderInput
             value={name}
             onChangeText={onChangeName}
             editable={isRequested}
             placeholder={t('placeholder.name')}
           />
-        </InputContainer>
-      </Row>
+        </View>
+      </View>
 
-      <Row>
-        <Title>
+      <View style={styles.row}>
+        <View style={styles.title}>
           <MainText>{t('mobilePhone')}</MainText>
-        </Title>
-        <InputContainer>
+        </View>
+        <View style={styles.inputContainer}>
           <BorderInput
             value={mobilePhone}
             onChangeText={onChangeMobilePhone}
             editable={isRequested}
             placeholder={t('placeholder.mobilePhone')}
           />
-        </InputContainer>
+        </View>
         <Button
           width={60}
           height={40}
@@ -121,20 +81,20 @@ const RequestVerifyView = ({
           disabled={!getIsWellFormedMobilePhone(mobilePhone) || isRequested}
           onPress={onPressRequest}
         />
-      </Row>
+      </View>
 
-      <Row>
-        <Title>
+      <View style={styles.row}>
+        <View style={styles.title}>
           <MainText>{t('verifyNumber')}</MainText>
-        </Title>
-        <InputContainer>
+        </View>
+        <View style={styles.inputContainer}>
           <BorderInput
             value={verifyNumber}
             onChangeText={onChangeVerifyNumber}
             editable={isVerified}
             placeholder={t('placeholder.verifyNumber')}
           />
-        </InputContainer>
+        </View>
         <Button
           width={60}
           height={40}
@@ -142,24 +102,77 @@ const RequestVerifyView = ({
           disabled={verifyNumber.length !== 6 || isVerified}
           onPress={onPressVerify}
         />
-      </Row>
-      <TimeContainer $isShown={!!second && !isVerified}>
+      </View>
+
+      <View
+        style={[
+          styles.timeContainer,
+          isTimeShown ? styles.timeShown : styles.timeHidden,
+        ]}>
         <MainText>{getMinuteFromSecond(second)}</MainText>
-      </TimeContainer>
-      <ConsentContainer>
+      </View>
+
+      <View style={styles.consentContainer}>
         <MainText fontSize={14} color={BLUE.DEFAULT}>
           개인정보 수집 및 이용 동의
         </MainText>
         <CheckButton value={isConsent} onChange={onChangeConsent} />
-      </ConsentContainer>
+      </View>
+
       <Button
         onPress={onPressDone}
         height={40}
         text={t('button.register')}
         disabled={!isConsent && !isRequested && !isVerified}
       />
-    </Container>
+    </View>
   );
 };
 
 export default RequestVerifyView;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    gap: 10,
+  },
+
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+    gap: 10,
+  },
+
+  title: {
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    width: 60,
+  },
+
+  inputContainer: {
+    flexGrow: 1,
+  },
+
+  timeContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    paddingLeft: 10,
+  },
+  timeShown: {
+    opacity: 1,
+  },
+  timeHidden: {
+    opacity: 0,
+    height: 0,
+  },
+
+  consentContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+});

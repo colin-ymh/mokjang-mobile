@@ -1,21 +1,23 @@
-import styled from 'styled-components/native';
+import {View, StyleSheet} from 'react-native';
 
 import {GRAY} from '../../../constants/style/color';
 import RequestVerify from '../../molecules/register-screen/request-verify';
 
-const Container = styled.View`
-  flex: 1;
-  background-color: ${GRAY.SIDE_BAR};
-  justify-content: center;
-  padding: 20px;
-`;
-
 const RegisterContainer = () => {
   return (
-    <Container>
+    <View style={styles.container}>
       <RequestVerify />
-    </Container>
+    </View>
   );
 };
 
 export default RegisterContainer;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: GRAY.SIDE_BAR,
+    justifyContent: 'center',
+    padding: 20,
+  },
+});

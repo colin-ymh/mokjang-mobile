@@ -1,6 +1,12 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Pressable, Animated, Easing, GestureResponderEvent} from 'react-native';
-import styled from 'styled-components/native';
+import  {useEffect, useRef, useState, useMemo} from 'react';
+import {
+  Pressable,
+  Animated,
+  Easing,
+  GestureResponderEvent,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native';
 
 import Check from '../../../../../public/svg/check.svg';
 import {GRAY, MAIN} from '../../../../constants/style/color';
@@ -13,28 +19,6 @@ type CheckButtonProps = {
   height?: number;
   isStopPropagation?: boolean;
 };
-
-const Container = styled(Pressable)<{
-  $width: number;
-  $height: number;
-  $disabled: boolean;
-}>`
-  border-width: 1px;
-  border-color: ${GRAY.DEFAULT};
-  border-radius: 5px;
-  width: ${({$width}) => $width}px;
-  height: ${({$height}) => $height}px;
-  align-items: center;
-  justify-content: center;
-  opacity: ${({$disabled}) => ($disabled ? 0.5 : 1)};
-`;
-
-const CheckContainer = styled(Animated.View)``;
-
-const StyledCheck = styled(Check)<{strokeColor?: string}>`
-  width: 25px;
-  height: 25px;
-`;
 
 const CheckButton = ({
   value,
@@ -75,18 +59,35 @@ const CheckButton = ({
     }
   };
 
+  const containerStyle = useMemo<ViewStyle>(
+    () => ({
+      width,
+      height,
+      opacity: disabled ? 0.5 : 1,
+    }),
+    [width, height, disabled],
+  );
+
   return (
-    <Container
-      $width={width}
-      $height={height}
-      $disabled={disabled}
+    <Pressable
+      style={[styles.container, containerStyle]}
       onPress={handlePress}
       testID="CheckButtonContainer">
-      <CheckContainer style={{opacity: animatedOpacity}}>
-        <StyledCheck strokeColor={MAIN.DEFAULT} />
-      </CheckContainer>
-    </Container>
+      <Animated.View style={{opacity: animatedOpacity}}>
+        <Check width={25} height={25} stroke={MAIN.DEFAULT} />
+      </Animated.View>
+    </Pressable>
   );
 };
 
 export default CheckButton;
+
+const styles = StyleSheet.create({
+  container: {
+    borderWidth: 1,
+    borderColor: GRAY.DEFAULT,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
