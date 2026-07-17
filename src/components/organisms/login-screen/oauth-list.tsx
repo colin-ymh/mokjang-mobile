@@ -82,8 +82,10 @@ const OauthList = ({navigation}: OauthListProps) => {
         });
 
         const userResponse = await userApi.getUser();
-        if (userResponse.data) {
-          dispatch(setUser(userResponse.data));
+        // GET /me 응답은 {data: user, timestamp} 래퍼 → 실제 user는 .data.data
+        const me = userResponse.data?.data ?? userResponse.data;
+        if (me) {
+          dispatch(setUser(me));
           navigation.navigate(AUTH_STACK.MAIN_BOTTOM_TAB.NAME);
         }
       } else if (response.data.temporal) {

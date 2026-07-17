@@ -13,6 +13,9 @@ import {RootState} from '../../../redux/store';
 import {MemberApi} from '../../../api/member/member.api';
 import {Member} from '../../../models/member/member';
 import MemberCard from '../../molecules/member/member-card';
+import MemberDetail from './member-detail';
+import MemberAdd from './member-add';
+import MemberEdit from './member-edit';
 import {MainText} from '../../atoms/common/text/main-text';
 import Button from '../../atoms/common/button/button';
 import {GRAY, MAIN, WHITE} from '../../../constants/style/color';
@@ -33,6 +36,11 @@ const MemberList = ({onPressMember, onPressAdd}: MemberListProps) => {
   const [cursor, setCursor] = useState<string | undefined>(undefined);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [detailMemberId, setDetailMemberId] = useState<string | undefined>(
+    undefined,
+  );
+  const [addVisible, setAddVisible] = useState(false);
+  const [editMember, setEditMember] = useState<Member | null>(null);
 
   const loadMembers = useCallback(
     async (opts: {reset?: boolean; searchText?: string} = {}) => {
@@ -79,7 +87,10 @@ const MemberList = ({onPressMember, onPressAdd}: MemberListProps) => {
           text={'+ 교인 추가'}
           height={36}
           width={'auto'}
-          onPress={onPressAdd}
+          onPress={() => {
+            onPressAdd?.();
+            setAddVisible(true);
+          }}
         />
       </View>
 
@@ -99,7 +110,13 @@ const MemberList = ({onPressMember, onPressAdd}: MemberListProps) => {
         data={members}
         keyExtractor={item => item.id}
         renderItem={({item}) => (
-          <MemberCard member={item} onPress={id => onPressMember?.(id)} />
+          <MemberCard
+            member={item}
+            onPress={id => {
+              onPressMember?.(id);
+              setDetailMemberId(id);
+            }}
+          />
         )}
         onEndReachedThreshold={0.4}
         onEndReached={() => loadMembers()}
@@ -115,6 +132,33 @@ const MemberList = ({onPressMember, onPressAdd}: MemberListProps) => {
             <ActivityIndicator style={styles.footer} color={MAIN.DEFAULT} />
           ) : null
         }
+      />
+
+      <MemberDetail
+        visible={!!detailMemberId}
+        churchId={churchId}
+        memberId={detailMemberId}
+        onClose={() => setDetailMemberId(undefined)}
+        onDeleted={() => loadMembers({reset: true})}
+        onEdit={m => {
+          setDetailMemberId(undefined);
+          setEditMember(m);
+        }}
+      />
+
+      <MemberAdd
+        visible={addVisible}
+        churchId={churchId}
+        onClose={() => setAddVisible(false)}
+        onCreated={() => loadMembers({reset: true})}
+      />
+
+      <MemberEdit
+        visible={!!editMember}
+        churchId={churchId}
+        member={editMember}
+        onClose={() => setEditMember(null)}
+        onUpdated={() => loadMembers({reset: true})}
       />
     </SafeAreaView>
   );

@@ -76,36 +76,37 @@ export class AuthApi {
     }
   };
   //
-  // /**
-  //  * 테스트용 로그인
-  //  * @param {getTestAuthParams} params
-  //  * @returns {Promise<AxiosResponse>}
-  //  */
-  // public getTestAuth = async (
-  //   params: getTestAuthParams,
-  // ): Promise<AxiosResponse> => {
-  //   const {provider, providerId} = params;
-  //
-  //   const url = new URL(`/auth/test/sign-in`, this._url);
-  //
-  //   url.searchParams.set('provider', provider);
-  //   url.searchParams.set('providerId', providerId);
-  //
-  //   try {
-  //     return await authorizeAxios.post(url.toString());
-  //   } catch (serverError: any) {
-  //     if (serverError.response) {
-  //       const {message, error, statusCode} = serverError.response.data;
-  //       throw new CustomError(message, error, statusCode);
-  //     } else {
-  //       throw new CustomError(
-  //         '알 수 없는 에러가 발생했습니다',
-  //         500,
-  //         'Unknown Error',
-  //       );
-  //     }
-  //   }
-  // };
+  /**
+   * 테스트용 로그인 (개발 검증용 — 백엔드 /auth/test/sign-in)
+   * 응답 Set-Cookie로 세션 쿠키가 네이티브 쿠키에 자동 저장된다.
+   * @param {getTestAuthParams} params
+   * @returns {Promise<AxiosResponse>}
+   */
+  public getTestAuth = async (
+    params: getTestAuthParams,
+  ): Promise<AxiosResponse> => {
+    const {provider, providerId} = params;
+
+    const url = new URL(`/auth/test/sign-in`, this._url);
+    url.searchParams.set('provider', provider);
+    url.searchParams.set('providerId', providerId);
+    url.searchParams.set('loginOption', 'test');
+
+    try {
+      return await authorizeAxios.post(url.toString());
+    } catch (serverError: any) {
+      if (serverError.response) {
+        const {message, error, statusCode} = serverError.response.data;
+        throw new CustomError(message, error, statusCode);
+      } else {
+        throw new CustomError(
+          '알 수 없는 에러가 발생했습니다',
+          500,
+          'Unknown Error',
+        );
+      }
+    }
+  };
 
   /**
    * 인증번호 요청
