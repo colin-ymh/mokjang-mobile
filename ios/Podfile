@@ -30,5 +30,17 @@ target 'MokjangMobile' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # Xcode 26 (Apple Clang 21) enforces stricter C++20 consteval rules, which the
+    # fmt 11.0.2 pinned by RN 0.82 fails to satisfy (FMT_STRING in format-inl.h).
+    # Building only the fmt pod as C++17 skips the consteval path and falls back to
+    # fmt's runtime format string validation. Remove once RN >= 0.83.9 (fmt 12.1.0).
+    installer.pods_project.targets.each do |target|
+      next unless target.name == 'fmt'
+
+      target.build_configurations.each do |build_config|
+        build_config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
+      end
+    end
   end
 end
