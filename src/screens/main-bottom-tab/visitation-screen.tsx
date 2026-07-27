@@ -1,15 +1,7 @@
-import {useRef} from 'react';
-
-import CustomWebview from '../../components/atoms/webview/custom-webview';
+import VisitationList from '../../components/organisms/visitation-screen/visitation-list';
 
 const VisitationScreen = () => {
-  const webRef = useRef(null);
-
-  return (
-    <>
-      <CustomWebview webRef={webRef} uri={'main/visitation'} />
-    </>
-  );
+  return <VisitationList />;
 };
 
 export default VisitationScreen;
