@@ -1,15 +1,7 @@
-import {useRef} from 'react';
-
-import CustomWebview from '../../components/atoms/webview/custom-webview';
+import ComingSoon from '../../components/atoms/common/coming-soon/coming-soon';
 
 const CalendarScreen = () => {
-  const webRef = useRef(null);
-
-  return (
-    <>
-      <CustomWebview webRef={webRef} uri={'main/calendar'} />
-    </>
-  );
+  return <ComingSoon title="일정" />;
 };
 
 export default CalendarScreen;

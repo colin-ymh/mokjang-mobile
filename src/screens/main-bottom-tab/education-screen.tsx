@@ -1,16 +1,7 @@
-import {useRef} from 'react';
-
-import CustomWebview from '../../components/atoms/webview/custom-webview';
+import ComingSoon from '../../components/atoms/common/coming-soon/coming-soon';
 
 const EducationScreen = () => {
-  console.log('education screen');
-  const webRef = useRef(null);
-
-  return (
-    <>
-      <CustomWebview webRef={webRef} uri={'main/education/all'} />
-    </>
-  );
+  return <ComingSoon title="교육" />;
 };
 
 export default EducationScreen;

@@ -1,15 +1,7 @@
-import {useRef} from 'react';
-
-import CustomWebview from '../../components/atoms/webview/custom-webview';
+import ComingSoon from '../../components/atoms/common/coming-soon/coming-soon';
 
 const TaskScreen = () => {
-  const webRef = useRef(null);
-
-  return (
-    <>
-      <CustomWebview webRef={webRef} uri={'main/task'} />
-    </>
-  );
+  return <ComingSoon title="업무" />;
 };
 
 export default TaskScreen;
