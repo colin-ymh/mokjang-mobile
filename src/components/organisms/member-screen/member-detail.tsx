@@ -25,6 +25,18 @@ type MemberDetailProps = {
   onEdit?: (member: Member) => void;
 };
 
+// 생년월일 등 ISO 날짜를 KST 기준 YYYY-MM-DD로 표시.
+const formatDate = (iso?: string) => {
+  if (!iso) return undefined;
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return iso;
+  const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
+  const y = kst.getUTCFullYear();
+  const m = String(kst.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(kst.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+};
+
 const Row = ({label, value}: {label: string; value?: string}) => (
   <View style={styles.row}>
     <MainText fontSize={13} color={GRAY.SEMI_DARK}>
@@ -120,7 +132,7 @@ const MemberDetail = ({
               <Row label="직분" value={member.officer?.name} />
               <Row label="그룹" value={member.group?.name ?? undefined} />
               <Row label="성별" value={member.gender} />
-              <Row label="생년월일" value={member.birth} />
+              <Row label="생년월일" value={formatDate(member.birth)} />
               <Row label="하시는 일" value={member.occupation} />
               <Row label="학교" value={member.school} />
               <Row
