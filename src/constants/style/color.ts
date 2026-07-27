@@ -1,32 +1,34 @@
-export const BLACK = '#121212';
+// 웹앱(@mokjang/constants src/color.ts)과 색상 팔레트를 맞춘다.
+// mokjang-mobile은 별도 레포라 값을 직접 동기화한다.
+export const BLACK = '#111827';
 export const WHITE = '#FFFFFF';
 
 export enum GRAY {
-  BACKGROUND = '#fafafa',
-  SIDE_BAR = '#F9FAFA',
-  LIGHT = '#e1e1e1',
-  DEFAULT = '#B9B9B9',
-  SEMI_DARK = '#605f5f',
-  DARK = '#4a4a4a',
-  EXTRA_DARK = '#3a3a3a',
+  BACKGROUND = '#F9FAFB',
+  SIDE_BAR = '#F9FAFB',
+  LIGHT = '#E5E7EB',
+  DEFAULT = '#9F9F9F',
+  SEMI_DARK = '#7F7F7F',
+  DARK = '#6B7280',
+  EXTRA_DARK = '#374151',
 }
 
 export enum MAIN {
-  LIGHT = '#A0CA88',
-  DEFAULT = '#299951',
-  DARK = '#184727',
+  LIGHT = '#DBEAFE',
+  DEFAULT = '#2563EB',
+  DARK = '#1A51CD',
 }
 
 export enum DESTRUCTIVE {
-  LIGHT = '#fa7778',
-  DEFAULT = '#F83D3E',
-  DARK = '#ae2b2b',
+  LIGHT = '#FECACA',
+  DEFAULT = '#EF4444',
+  DARK = '#B91C1C',
 }
 
 export enum BLUE {
-  DEFAULT = '#2b5bf3',
+  DEFAULT = '#2563EB',
 }
 
 export enum RED {
-  DEFAULT = '#fb3c3c',
+  DEFAULT = '#EF4444',
 }

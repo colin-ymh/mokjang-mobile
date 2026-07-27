@@ -7,7 +7,7 @@ const CalendarScreen = () => {
 
   return (
     <>
-      <CustomWebview webRef={webRef} uri={'admin/main/calendar'} />
+      <CustomWebview webRef={webRef} uri={'main/calendar'} />
     </>
   );
 };

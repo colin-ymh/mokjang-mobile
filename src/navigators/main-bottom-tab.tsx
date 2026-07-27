@@ -18,7 +18,7 @@ type MainBottomTabProps = {};
 const MainBottomTab = ({}: MainBottomTabProps) => {
   return (
     <Tab.Navigator
-      initialRouteName={MAIN_BOTTOM_TAB.HOME.NAME}
+      initialRouteName={MAIN_BOTTOM_TAB.MEMBER.NAME}
       screenOptions={{headerShown: false}}>
       <Tab.Screen name={MAIN_BOTTOM_TAB.HOME.NAME} component={HomeScreen} />
       <Tab.Screen name={MAIN_BOTTOM_TAB.MEMBER.NAME} component={MemberScreen} />

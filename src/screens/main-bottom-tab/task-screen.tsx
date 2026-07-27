@@ -7,7 +7,7 @@ const TaskScreen = () => {
 
   return (
     <>
-      <CustomWebview webRef={webRef} uri={'admin/main/task'} />
+      <CustomWebview webRef={webRef} uri={'main/task'} />
     </>
   );
 };

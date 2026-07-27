@@ -8,7 +8,7 @@ const EducationScreen = () => {
 
   return (
     <>
-      <CustomWebview webRef={webRef} uri={'ko/admin/main/education/all'} />
+      <CustomWebview webRef={webRef} uri={'main/education/all'} />
     </>
   );
 };

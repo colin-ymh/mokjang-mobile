@@ -13,7 +13,7 @@ import {MemberApi} from '../../../api/member/member.api';
 import {Member} from '../../../models/member/member';
 import {MainText} from '../../atoms/common/text/main-text';
 import Button from '../../atoms/common/button/button';
-import {GRAY, MAIN, WHITE} from '../../../constants/style/color';
+import {DESTRUCTIVE, GRAY, MAIN, WHITE} from '../../../constants/style/color';
 
 type MemberEditProps = {
   visible: boolean;
@@ -88,7 +88,7 @@ const MemberEdit = ({
         <View style={styles.body}>
           <View style={styles.field}>
             <MainText fontSize={14} fontWeight={600} color={GRAY.EXTRA_DARK}>
-              이름 <MainText color={'#F83D3E'}>*</MainText>
+              이름 <MainText color={DESTRUCTIVE.DEFAULT}>*</MainText>
             </MainText>
             <TextInput
               style={styles.input}
@@ -100,7 +100,7 @@ const MemberEdit = ({
           </View>
           <View style={styles.field}>
             <MainText fontSize={14} fontWeight={600} color={GRAY.EXTRA_DARK}>
-              전화번호 <MainText color={'#F83D3E'}>*</MainText>
+              전화번호 <MainText color={DESTRUCTIVE.DEFAULT}>*</MainText>
             </MainText>
             <TextInput
               style={styles.input}

@@ -7,7 +7,7 @@ const VisitationScreen = () => {
 
   return (
     <>
-      <CustomWebview webRef={webRef} uri={'admin/main/visitation'} />
+      <CustomWebview webRef={webRef} uri={'main/visitation'} />
     </>
   );
 };

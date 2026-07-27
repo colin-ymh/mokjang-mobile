@@ -7,7 +7,7 @@ const HomeScreen = () => {
 
   return (
     <>
-      <CustomWebview webRef={webRef} uri={'admin/main/home'} />
+      <CustomWebview webRef={webRef} uri={'main/home'} />
     </>
   );
 };
