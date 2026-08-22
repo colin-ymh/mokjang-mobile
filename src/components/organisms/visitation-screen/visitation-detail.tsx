@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Modal,
   Pressable,
   SafeAreaView,
@@ -12,19 +13,23 @@ import {
 import {VisitationApi} from '../../../api/visitation/visitation.api';
 import {Visitation} from '../../../models/visitation/visitation';
 import {MainText} from '../../atoms/common/text/main-text';
-import {GRAY, MAIN, WHITE} from '../../../constants/style/color';
+import Button from '../../atoms/common/button/button';
+import {DESTRUCTIVE, GRAY, MAIN, WHITE} from '../../../constants/style/color';
 import {
   formatDate,
   methodLabel,
   statusColor,
   statusLabel,
 } from '../../../constants/visitation';
+import {showErrorAlert} from '../../../utils/error-handler';
 
 type VisitationDetailProps = {
   visible: boolean;
   churchId?: number;
   visitationId?: string;
   onClose: () => void;
+  onDeleted: () => void;
+  onEdit?: (visitation: Visitation) => void;
 };
 
 const Row = ({label, value}: {label: string; value?: string}) => (
@@ -43,6 +48,8 @@ const VisitationDetail = ({
   churchId,
   visitationId,
   onClose,
+  onDeleted,
+  onEdit,
 }: VisitationDetailProps) => {
   const visitationApi = useMemo(() => new VisitationApi(), []);
   const [visitation, setVisitation] = useState<Visitation | null>(null);
@@ -55,7 +62,7 @@ const VisitationDetail = ({
       const res = await visitationApi.getVisitation({churchId, visitationId});
       setVisitation(res.data?.data ?? res.data);
     } catch (e) {
-      // TODO: 토스트
+      showErrorAlert(e);
     } finally {
       setLoading(false);
     }
@@ -74,6 +81,26 @@ const VisitationDetail = ({
     ? `${formatDate(visitation.startDate)} ~ ${formatDate(visitation.endDate)}`
     : '-';
   const memberNames = visitation?.members?.map(m => m.name).join(', ');
+
+  const onDelete = () => {
+    if (!churchId || !visitationId) return;
+    Alert.alert('심방 삭제', '이 심방을 삭제할까요?', [
+      {text: '취소', style: 'cancel'},
+      {
+        text: '삭제',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await visitationApi.deleteVisitation({churchId, visitationId});
+            onDeleted();
+            onClose();
+          } catch (e) {
+            showErrorAlert(e, '삭제 실패');
+          }
+        },
+      },
+    ]);
+  };
 
   return (
     <Modal
@@ -145,6 +172,24 @@ const VisitationDetail = ({
             ) : null}
           </ScrollView>
         )}
+
+        <View style={styles.footer}>
+          <Button
+            text="삭제"
+            width={'auto'}
+            height={44}
+            backgroundColor={WHITE}
+            color={DESTRUCTIVE.DEFAULT}
+            borderColor={GRAY.LIGHT}
+            onPress={onDelete}
+          />
+          <Button
+            text="수정"
+            width={'auto'}
+            height={44}
+            onPress={() => visitation && onEdit?.(visitation)}
+          />
+        </View>
       </SafeAreaView>
     </Modal>
   );
@@ -179,6 +224,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: GRAY.LIGHT,
     borderRadius: 8,
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 12,
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: GRAY.LIGHT,
   },
 });
 

@@ -14,8 +14,12 @@ import {VisitationApi} from '../../../api/visitation/visitation.api';
 import {Visitation} from '../../../models/visitation/visitation';
 import VisitationCard from '../../molecules/visitation/visitation-card';
 import VisitationDetail from './visitation-detail';
+import VisitationAdd from './visitation-add';
+import VisitationEdit from './visitation-edit';
 import {MainText} from '../../atoms/common/text/main-text';
+import Button from '../../atoms/common/button/button';
 import {GRAY, MAIN, WHITE} from '../../../constants/style/color';
+import {showErrorAlert} from '../../../utils/error-handler';
 
 const TAKE = 20;
 
@@ -31,6 +35,8 @@ const VisitationList = () => {
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const [detailId, setDetailId] = useState<string | undefined>(undefined);
+  const [addVisible, setAddVisible] = useState(false);
+  const [editVisitation, setEditVisitation] = useState<Visitation | null>(null);
 
   const load = useCallback(
     async (opts: {reset?: boolean; searchText?: string} = {}) => {
@@ -52,7 +58,7 @@ const VisitationList = () => {
         setPage(nextPage);
         setHasMore(data.length === TAKE);
       } catch (e) {
-        // TODO: 토스트로 에러 표시
+        showErrorAlert(e);
       } finally {
         setLoading(false);
       }
@@ -73,6 +79,12 @@ const VisitationList = () => {
         <MainText fontSize={22} fontWeight={700} color={GRAY.EXTRA_DARK}>
           심방
         </MainText>
+        <Button
+          text={'+ 심방 추가'}
+          height={36}
+          width={'auto'}
+          onPress={() => setAddVisible(true)}
+        />
       </View>
 
       <View style={styles.searchBox}>
@@ -114,6 +126,26 @@ const VisitationList = () => {
         churchId={churchId}
         visitationId={detailId}
         onClose={() => setDetailId(undefined)}
+        onDeleted={() => load({reset: true})}
+        onEdit={v => {
+          setDetailId(undefined);
+          setEditVisitation(v);
+        }}
+      />
+
+      <VisitationAdd
+        visible={addVisible}
+        churchId={churchId}
+        onClose={() => setAddVisible(false)}
+        onCreated={() => load({reset: true})}
+      />
+
+      <VisitationEdit
+        visible={!!editVisitation}
+        churchId={churchId}
+        visitation={editVisitation}
+        onClose={() => setEditVisitation(null)}
+        onUpdated={() => load({reset: true})}
       />
     </SafeAreaView>
   );

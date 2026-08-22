@@ -24,3 +24,15 @@ export type Visitation = {
   createdAt?: string;
   updatedAt?: string;
 };
+
+// 심방 생성 요청 바디
+export type CreateVisitationBody = {
+  status: string;
+  visitationMethod: string;
+  title: string;
+  inChargeId: string;
+  startDate: string;
+  endDate: string;
+  visitationDetails: Array<{visitationContent: string; visitationPray: string}>;
+  memberIds: string[];
+};
