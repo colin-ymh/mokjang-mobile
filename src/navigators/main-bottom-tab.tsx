@@ -7,6 +7,7 @@ import {
 import MemberScreen from '../screens/main-bottom-tab/member-screen';
 import HomeScreen from '../screens/main-bottom-tab/home-screen';
 import VisitationScreen from '../screens/main-bottom-tab/visitation-screen';
+import AttendanceScreen from '../screens/main-bottom-tab/attendance-screen';
 import EducationScreen from '../screens/main-bottom-tab/education-screen';
 import TaskScreen from '../screens/main-bottom-tab/task-screen';
 import CalendarScreen from '../screens/main-bottom-tab/calendar-screen';
@@ -25,6 +26,10 @@ const MainBottomTab = ({}: MainBottomTabProps) => {
       <Tab.Screen
         name={MAIN_BOTTOM_TAB.VISITATION.NAME}
         component={VisitationScreen}
+      />
+      <Tab.Screen
+        name={MAIN_BOTTOM_TAB.ATTENDANCE.NAME}
+        component={AttendanceScreen}
       />
       <Tab.Screen
         name={MAIN_BOTTOM_TAB.EDUCATION.NAME}

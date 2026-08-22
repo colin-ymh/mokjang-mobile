@@ -3,7 +3,7 @@ export const AUTH_STACK = {
   TEST_LOGIN: {NAME: 'TestLoginScreen', TITLE: '소셜로그인 화면'},
   MAIN_BOTTOM_TAB: {NAME: 'MainBottomTabNav', TITLE: '메인 스택'},
   REGISTER: {NAME: 'RegisterScreen', TITLE: '회원등록 화면'},
-  APP: {NAME: 'AppScreen', TITLE: '앱'}
+  APP: {NAME: 'AppScreen', TITLE: '앱'},
 } as const;
 
 export type AuthStackParams = {
@@ -14,6 +14,7 @@ export const MAIN_BOTTOM_TAB = {
   HOME: {NAME: 'HomeScreen', TITLE: '홈 화면'},
   MEMBER: {NAME: 'MemberScreen', TITLE: '교인 화면'},
   VISITATION: {NAME: 'VisitationScreen', TITLE: '심방 화면'},
+  ATTENDANCE: {NAME: 'AttendanceScreen', TITLE: '출석 화면'},
   EDUCATION: {NAME: 'EducationScreen', TITLE: '교육 화면'},
   TASK: {NAME: 'TaskScreen', TITLE: '업무 화면'},
   CALENDAR: {NAME: 'CalendarScreen', TITLE: '일정표 화면'},
@@ -21,4 +22,14 @@ export const MAIN_BOTTOM_TAB = {
 
 export type MainBottomTabParams = {
   [KEY in keyof typeof MAIN_BOTTOM_TAB as (typeof MAIN_BOTTOM_TAB)[KEY]['NAME']]: undefined;
+};
+
+export const ATTENDANCE_STACK = {
+  WORSHIP_LIST: {NAME: 'WorshipListScreen', TITLE: '예배 목록'},
+  ROSTER: {NAME: 'RosterScreen', TITLE: '출석 체크'},
+} as const;
+
+export type AttendanceStackParams = {
+  [ATTENDANCE_STACK.WORSHIP_LIST.NAME]: undefined;
+  [ATTENDANCE_STACK.ROSTER.NAME]: {worshipId: string; worshipTitle: string};
 };
