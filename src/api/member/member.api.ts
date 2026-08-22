@@ -15,7 +15,7 @@ const buildQuery = (params: Record<string, string | number | undefined>) =>
 const throwCustom = (serverError: any): never => {
   if (serverError.response) {
     const {message, error, statusCode} = serverError.response.data;
-    throw new CustomError(message, error, statusCode);
+    throw new CustomError(message, statusCode, error);
   }
   throw new CustomError('알 수 없는 에러가 발생했습니다', 500, 'Unknown Error');
 };

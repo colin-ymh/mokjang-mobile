@@ -19,13 +19,9 @@ import MemberEdit from './member-edit';
 import {MainText} from '../../atoms/common/text/main-text';
 import Button from '../../atoms/common/button/button';
 import {GRAY, MAIN, WHITE} from '../../../constants/style/color';
+import {showErrorAlert} from '../../../utils/error-handler';
 
-type MemberListProps = {
-  onPressMember?: (memberId: string) => void;
-  onPressAdd?: () => void;
-};
-
-const MemberList = ({onPressMember, onPressAdd}: MemberListProps) => {
+const MemberList = () => {
   const memberApi = useMemo(() => new MemberApi(), []);
   const churchId = useSelector(
     (state: RootState) => state.user.user.churchUser?.[0]?.churchId,
@@ -61,7 +57,7 @@ const MemberList = ({onPressMember, onPressAdd}: MemberListProps) => {
         setCursor(res.data.nextCursor ?? undefined);
         setHasMore(Boolean(res.data.hasMore));
       } catch (e) {
-        // TODO: 토스트로 에러 표시
+        showErrorAlert(e);
       } finally {
         setLoading(false);
       }
@@ -87,10 +83,7 @@ const MemberList = ({onPressMember, onPressAdd}: MemberListProps) => {
           text={'+ 교인 추가'}
           height={36}
           width={'auto'}
-          onPress={() => {
-            onPressAdd?.();
-            setAddVisible(true);
-          }}
+          onPress={() => setAddVisible(true)}
         />
       </View>
 
@@ -110,13 +103,7 @@ const MemberList = ({onPressMember, onPressAdd}: MemberListProps) => {
         data={members}
         keyExtractor={item => item.id}
         renderItem={({item}) => (
-          <MemberCard
-            member={item}
-            onPress={id => {
-              onPressMember?.(id);
-              setDetailMemberId(id);
-            }}
-          />
+          <MemberCard member={item} onPress={id => setDetailMemberId(id)} />
         )}
         onEndReachedThreshold={0.4}
         onEndReached={() => loadMembers()}

@@ -15,6 +15,7 @@ import {Member} from '../../../models/member/member';
 import {MainText} from '../../atoms/common/text/main-text';
 import Button from '../../atoms/common/button/button';
 import {DESTRUCTIVE, GRAY, MAIN, WHITE} from '../../../constants/style/color';
+import {showErrorAlert} from '../../../utils/error-handler';
 
 type MemberDetailProps = {
   visible: boolean;
@@ -67,7 +68,7 @@ const MemberDetail = ({
       const res = await memberApi.getMember({churchId, memberId});
       setMember(res.data?.data ?? res.data);
     } catch (e) {
-      // TODO: 토스트
+      showErrorAlert(e);
     } finally {
       setLoading(false);
     }
