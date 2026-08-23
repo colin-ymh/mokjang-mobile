@@ -34,9 +34,9 @@ export class WorshipSessionsApi {
   }): Promise<AxiosResponse> => {
     const {churchId, worshipId, sessionDate} = params;
     const query = buildQuery({sessionDate});
-    const url = `${this._url}/churches/${churchId}/worships/${worshipId}/sessions/by-date?${query}`;
+    const url = `${this._url}/churches/${churchId}/worships/${worshipId}/sessions?${query}`;
     try {
-      return await authorizeAxios.post(url);
+      return await authorizeAxios.post(url, '');
     } catch (e) {
       return throwCustom(e);
     }
